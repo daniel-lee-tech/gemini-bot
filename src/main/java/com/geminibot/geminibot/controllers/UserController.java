@@ -2,7 +2,7 @@ package com.geminibot.geminibot.controllers;
 
 import com.geminibot.geminibot.datatransferobjects.RegisterDTO;
 import com.geminibot.geminibot.entities.postgres.User;
-import com.geminibot.geminibot.entities.responses.restcontrollers.LoginResponse;
+import com.geminibot.geminibot.entities.responses.restcontrollers.RegisterResponse;
 import com.geminibot.geminibot.repositories.UserRepository;
 import com.geminibot.geminibot.services.MailService;
 import org.springframework.http.HttpStatus;
@@ -52,39 +52,39 @@ public class UserController {
 
     @PostMapping("/user/register")
     @ResponseBody
-    public ResponseEntity<LoginResponse> postTestLogin(@RequestBody RegisterDTO registerDTO) {
+    public ResponseEntity<RegisterResponse> postTestLogin(@RequestBody RegisterDTO registerDTO) {
         User possibleUser = userRepository.findByEmail(registerDTO.getEmail());
 
         if (possibleUser != null) {
-            LoginResponse loginResponse = new LoginResponse("Email is already registered", true, new User(registerDTO));
-            System.out.println(loginResponse.getEntity());
-            return new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.valueOf(409));
+            RegisterResponse registerResponse = new RegisterResponse("Email is already registered", true, new User(registerDTO));
+            System.out.println(registerResponse.getEntity());
+            return new ResponseEntity<RegisterResponse>(registerResponse, HttpStatus.valueOf(409));
         }
 
         try {
             User user = userRepository.save(new User(registerDTO));
-            LoginResponse loginResponse = new LoginResponse("User with email=" + registerDTO.getEmail() + " has been created", false, user);
+            RegisterResponse registerResponse = new RegisterResponse("User with email: " + registerDTO.getEmail() + " has been created, Please check your email to activate!", false, user);
             mailService.sendActivationEmail(user);
-            return new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.valueOf(200));
+            return new ResponseEntity<RegisterResponse>(registerResponse, HttpStatus.valueOf(200));
 
         } catch (AssertionError e) {
-            LoginResponse loginResponse = new LoginResponse("Passwords do not match", true, new User(registerDTO));
-            return new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.valueOf(409));
+            RegisterResponse registerResponse = new RegisterResponse("Passwords do not match", true, new User(registerDTO));
+            return new ResponseEntity<RegisterResponse>(registerResponse, HttpStatus.valueOf(409));
 
         } catch (MessagingException messagingException) {
             // TODO: integrate something like rollbar here
             System.out.println(messagingException.getMessage());
             System.out.println("For some reason email could not be sent");
 
-            LoginResponse loginResponse = new LoginResponse("Internal error, please try again later, and contact an administrator", true, new User(registerDTO));
-            return new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.valueOf(500));
+            RegisterResponse registerResponse = new RegisterResponse("Internal error, please try again later, and contact an administrator", true, new User(registerDTO));
+            return new ResponseEntity<RegisterResponse>(registerResponse, HttpStatus.valueOf(500));
 
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
             // TODO: integrate something like rollbar here
-            LoginResponse loginResponse = new LoginResponse("Internal error, please try again later, and contact an administrator", true, new User(registerDTO));
+            RegisterResponse registerResponse = new RegisterResponse("Internal error, please try again later, and contact an administrator", true, new User(registerDTO));
 
-            return new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.valueOf(500));
+            return new ResponseEntity<RegisterResponse>(registerResponse, HttpStatus.valueOf(500));
         }
     }
 }
