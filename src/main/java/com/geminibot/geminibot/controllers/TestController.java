@@ -1,8 +1,6 @@
 package com.geminibot.geminibot.controllers;
 
-import com.geminibot.geminibot.datatransferobjects.RegisterDTO;
 import com.geminibot.geminibot.entities.postgres.User;
-import com.geminibot.geminibot.entities.responses.restcontrollers.LoginResponse;
 import com.geminibot.geminibot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

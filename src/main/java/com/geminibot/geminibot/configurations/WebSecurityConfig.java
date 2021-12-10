@@ -18,10 +18,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         // for react index.html to render properly
-                        HttpMethod.GET,
-                        "/", "/index*", "/static/**","/static/css/**", "/*.js", "/*.json", "/*.ico")
-                .permitAll()
-                .antMatchers( "/index", "/health/**", "/test/**", "/user/register", "/user/activate/**")
+                        "/", "/index*", "/static/**","/static/css/**", "/*.js", "/*.json", "/*.ico",
+                        "/what", "/health/**", "/test/**", "/user/register", "/user/activate/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
