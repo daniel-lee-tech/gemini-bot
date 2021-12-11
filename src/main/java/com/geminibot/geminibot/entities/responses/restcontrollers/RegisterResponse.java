@@ -2,23 +2,15 @@ package com.geminibot.geminibot.entities.responses.restcontrollers;
 
 import com.geminibot.geminibot.datatransferobjects.RegisterDTO;
 import com.geminibot.geminibot.entities.postgres.User;
-
-public class RegisterResponse extends RestControllerResponse<User> {
-    public RegisterResponse(String message, boolean error, User entity) {
+public class RegisterResponse extends RestControllerResponse<RegisterResponseEntity> {
+    public RegisterResponse(String message, boolean error, RegisterResponseEntity entity) {
         this.setMessage(message);
         this.setError(error);
         this.setEntity(entity);
     }
 
     @Override
-    public void setEntity(User entity) {
-        entity.redactPassword();
+    public void setEntity(RegisterResponseEntity entity) {
         this.entity = entity;
-    }
-
-    public void setEntity(RegisterDTO entity) {
-        entity.setPlainTextPassword("<REDACTED>");
-        entity.setPlainTextPasswordConfirmation("<REDACTED>");
-        this.entity = new User(entity);
     }
 }

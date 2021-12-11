@@ -1,9 +1,5 @@
 package com.geminibot.geminibot.entities.postgres;
 
-import com.geminibot.geminibot.datatransferobjects.RegisterDTO;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -15,28 +11,21 @@ public class User {
     private Long id;
     @Column(unique = true)
     private String email;
-    private String encodedPassword;
+    private String passwordDigest;
 
-    private boolean activated;
+    private boolean emailVerified;
 
     @Column(unique = true)
-    private UUID activationToken;
+    private UUID emailVerificationToken;
 
     public User(String email, String plainTextPassword) {
         this.email = email;
-        this.setEncodedPassword(plainTextPassword);
-        this.activationToken = UUID.randomUUID();
+        this.setPasswordDigest(plainTextPassword);
+        this.emailVerificationToken = UUID.randomUUID();
     }
 
     public User() {
-        this.activationToken = UUID.randomUUID();
-    }
-
-    public User(RegisterDTO registerDTO) throws AssertionError {
-        this.email = registerDTO.getEmail();
-        assert registerDTO.getPlainTextPassword().equals(registerDTO.getPlainTextPasswordConfirmation());
-        this.setEncodedPassword(registerDTO.getPlainTextPassword());
-        this.activationToken = UUID.randomUUID();
+        this.emailVerificationToken = UUID.randomUUID();
     }
 
     public Long getId() {
@@ -55,33 +44,32 @@ public class User {
         this.email = email;
     }
 
-    public String getEncodedPassword() {
-        return encodedPassword;
+    public String getPasswordDigest() {
+        return passwordDigest;
     }
 
-    public void setEncodedPassword(String plainTextPassword) {
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        this.encodedPassword = encoder.encode(plainTextPassword);
+    public void setPasswordDigest(String encodedPassword) {
+        this.passwordDigest = encodedPassword;
     }
 
-    public boolean isActivated() {
-        return activated;
+    public boolean isEmailVerified() {
+        return emailVerified;
     }
 
-    public void setActivated(boolean activated) {
-        this.activated = activated;
+    public void setEmailVerified(boolean activated) {
+        this.emailVerified = activated;
     }
 
-    public UUID getActivationToken() {
-        return activationToken;
+    public UUID getEmailVerificationToken() {
+        return emailVerificationToken;
     }
 
-    public void setActivationToken(UUID activationToken) {
-        this.activationToken = activationToken;
+    public void setEmailVerificationToken(UUID activationToken) {
+        this.emailVerificationToken = activationToken;
     }
 
     public void redactPassword() {
-        this.encodedPassword = "<REDACTED>";
+        this.passwordDigest = "<REDACTED>";
     }
 
     @Override

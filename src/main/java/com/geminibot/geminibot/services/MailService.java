@@ -20,7 +20,7 @@ public class MailService {
     public void sendActivationEmail(User user) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        String htmlMessage = "<a href=\"localhost:8080/user/activate/" + user.getActivationToken() + "\">Click localhost:8080/user/activate/" + user.getActivationToken() + " to activate your account</a>";
+        String htmlMessage = "<a href=\"localhost:8080/user/activate/" + user.getEmailVerificationToken() + "\">Click localhost:8080/user/activate/" + user.getEmailVerificationToken() + " to activate your account</a>";
         helper.setText(htmlMessage, true);
         helper.setTo(user.getEmail());
         helper.setSubject("Confirm Email for Gemini Bot");
