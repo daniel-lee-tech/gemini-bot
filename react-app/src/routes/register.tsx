@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { ReactElement, useContext, useState } from "react";
 import { useFormik } from "formik";
 import { FormikFormControl } from "../components/FormirkFormControl/formik-form-control";
@@ -58,7 +58,9 @@ function Register(): ReactElement {
       ) : (
         <form action="POST" onSubmit={formik.handleSubmit}>
           <p>{submitMessage}</p>
-          <h2> Register</h2>
+          <Typography variant="h2" gutterBottom={true}>
+            Register
+          </Typography>
 
           <FormikFormControl
             formik={formik}
