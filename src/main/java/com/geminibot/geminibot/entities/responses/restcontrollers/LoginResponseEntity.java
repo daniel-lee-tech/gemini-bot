@@ -1,33 +1,29 @@
 package com.geminibot.geminibot.entities.responses.restcontrollers;
 
 import com.geminibot.geminibot.datatransferobjects.LoginDTO;
+import com.geminibot.geminibot.entities.postgres.User;
 
 public class LoginResponseEntity {
+    private long id;
     private String email;
-    private String plainTextPassword;
     private String jsonWebToken;
-
-    public LoginResponseEntity(String email, String plainTextPassword, String jsonWebToken) {
-        this.email = email;
-        this.plainTextPassword = plainTextPassword;
-        this.jsonWebToken = jsonWebToken;
-    }
-
-    public LoginResponseEntity(String email, String plainTextPassword) {
-        this.email = email;
-        this.plainTextPassword = plainTextPassword;
-    }
 
     public LoginResponseEntity(LoginDTO loginDTO) {
         this.email = loginDTO.getEmail();
-        this.plainTextPassword = loginDTO.getPlainTextPassword();
     }
 
-
-    public LoginResponseEntity(LoginDTO loginDTO, String jsonWebToken) {
-        this.email = loginDTO.getEmail();
-        this.plainTextPassword = loginDTO.getPlainTextPassword();
+    public LoginResponseEntity(User authenticatedUser, String jsonWebToken) {
+        this.id = authenticatedUser.getId();
+        this.email = authenticatedUser.getEmail();
         this.jsonWebToken = jsonWebToken;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -36,14 +32,6 @@ public class LoginResponseEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPlainTextPassword() {
-        return plainTextPassword;
-    }
-
-    public void setPlainTextPassword(String plainTextPassword) {
-        this.plainTextPassword = plainTextPassword;
     }
 
     public String getJsonWebToken() {
@@ -57,8 +45,8 @@ public class LoginResponseEntity {
     @Override
     public String toString() {
         return "LoginResponseEntity{" +
-                "email='" + email + '\'' +
-                ", plainTextPassword='" + plainTextPassword + '\'' +
+                "id=" + id +
+                ", email='" + email + '\'' +
                 ", jsonWebToken='" + jsonWebToken + '\'' +
                 '}';
     }

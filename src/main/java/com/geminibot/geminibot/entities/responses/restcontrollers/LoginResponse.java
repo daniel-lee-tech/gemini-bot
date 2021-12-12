@@ -6,6 +6,7 @@ public class LoginResponse extends RestControllerResponse<LoginResponseEntity>{
 
 
     public LoginResponse(String message, boolean error, LoginResponseEntity entity) {
+        super();
         this.setMessage(message);
         this.setError(error);
         this.setEntity(entity);

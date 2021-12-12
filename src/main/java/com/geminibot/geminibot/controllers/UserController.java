@@ -112,7 +112,7 @@ public class UserController {
 
             String jsonWebToken = jwtService.createToken(authenticatedUser.getEmail(), authenticatedUser.getId());
 
-            LoginResponseEntity loginResponseEntity = new LoginResponseEntity(loginDTO, jsonWebToken);
+            LoginResponseEntity loginResponseEntity = new LoginResponseEntity(authenticatedUser, jsonWebToken);
             LoginResponse loginResponse = new LoginResponse("Success, please add json web token to headers in all subsequent requests", false, loginResponseEntity);
 
             return new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.OK);
