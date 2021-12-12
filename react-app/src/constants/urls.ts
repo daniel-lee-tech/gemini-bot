@@ -10,4 +10,8 @@ const userRegisterUrl = (): string => {
   return "/user/register";
 };
 
-export { urlPrefix, userRegisterUrl };
+const userLoginUrl = (): string => {
+  return "/user/login";
+};
+
+export { urlPrefix, userRegisterUrl, userLoginUrl };

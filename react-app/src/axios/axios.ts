@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig } from "axios";
 
 const axiosConfig: AxiosRequestConfig = { baseURL: urlPrefix() };
 
-const axiosInstance = (customConfig: AxiosRequestConfig = axiosConfig) =>
-  axios.create(customConfig);
+const axiosInstance = (customConfig?: any) =>
+  axios.create({ ...axiosConfig, ...customConfig });
 
-export { axiosInstance };
+export { axiosInstance, axiosConfig };

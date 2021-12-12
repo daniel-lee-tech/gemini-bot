@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import { ReactElement, useState } from "react";
+import { ReactElement, useContext, useState } from "react";
 import { useFormik } from "formik";
 import { FormikFormControl } from "../components/FormirkFormControl/formik-form-control";
 import {
@@ -11,10 +11,12 @@ import { AxiosError, AxiosResponse } from "axios";
 import { userRegisterUrl } from "../constants/urls";
 import { axiosInstance } from "../axios/axios";
 import { RegisterResponse } from "../types/axios-responses/RegisterResponse";
+import { AxiosConfigContext } from "../contexts/AxiosContext";
 
 function Register(): ReactElement {
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  const axiosContext = useContext(AxiosConfigContext);
 
   const formik = useFormik({
     initialValues: {
@@ -25,7 +27,7 @@ function Register(): ReactElement {
     validationSchema: RegisterDTOValidationSchema,
     onSubmit: (values: RegisterDTO) => {
       setFormIsSubmitting(true);
-      axiosInstance()
+      axiosInstance(axiosContext.axiosConfig)
         .post(userRegisterUrl(), values)
         .then((successResponse: AxiosResponse<RegisterResponse>) => {
           const data: RegisterResponse = successResponse.data;
@@ -37,9 +39,10 @@ function Register(): ReactElement {
             errorResponse?.response?.data;
 
           if (data === undefined) {
-            alert(
+            setSubmitMessage(
               "Something went wrong, please let us know your issue by contacting us. So sorry!"
             );
+            setFormIsSubmitting(false);
           } else {
             setSubmitMessage(data.message);
             setFormIsSubmitting(false);
