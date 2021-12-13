@@ -8,12 +8,16 @@ import { AxiosError, AxiosResponse } from "axios";
 import { userLoginUrl } from "../constants/urls";
 import { axiosInstance } from "../axios/axios";
 import { LoginResponse } from "../types/axios-responses/LoginResponse";
-import { AxiosConfigContext } from "../contexts/AxiosContext";
+import { UserAxiosContext } from "../contexts/UserAxiosContext";
 
 function Login(): ReactElement {
-  const [formIsSubmitting, setFormIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState("");
-  const axiosContext = useContext(AxiosConfigContext);
+  const [formSubmitState, setFormSubmitState] = useState({
+    formIsSubmitting: false,
+    submitMessage: "",
+  });
+
+  const { setUserInfo, setAxiosConfig, setUserAxiosConfig } =
+    useContext(UserAxiosContext);
 
   const formik = useFormik({
     initialValues: {
@@ -22,47 +26,60 @@ function Login(): ReactElement {
     },
     validationSchema: LoginDTOValidationSchema,
     onSubmit: (values: LoginDTO) => {
-      setFormIsSubmitting(true);
+      setFormSubmitState({
+        formIsSubmitting: true,
+        submitMessage: "Submitting, please do NOT refresh.",
+      });
+
       axiosInstance()
         .post(userLoginUrl(), values)
         .then((successResponse: AxiosResponse<LoginResponse>) => {
           const data: LoginResponse = successResponse.data;
-          setSubmitMessage(data.message);
-          setFormIsSubmitting(false);
+          setFormSubmitState({
+            formIsSubmitting: false,
+            submitMessage: data.message,
+          });
 
-          if (axiosContext != null && axiosContext.setAxiosConfig != null) {
-            axiosContext.setAxiosConfig({
-              headers: { Authorization: "Bearer " + data.entity.jsonWebToken },
+          if (setAxiosConfig != null && setUserInfo != null) {
+            setUserAxiosConfig({
+              userInfo: {
+                id: data.entity.id,
+                email: data.entity.email,
+                jsonWebToken: data.entity.jsonWebToken,
+              },
+              axiosConfig: {
+                headers: {
+                  Authorization: "Bearer " + data.entity.jsonWebToken,
+                },
+              },
             });
           }
         })
         .catch((errorResponse: AxiosError<LoginResponse>) => {
           const data: LoginResponse | undefined = errorResponse?.response?.data;
 
-          axiosContext.setAxiosConfig({
+          setAxiosConfig({
             headers: { Authorization: "" },
           });
 
-          if (data === undefined) {
-            setSubmitMessage(
-              "Something went wrong, please let us know your issue by contacting us. So sorry!"
-            );
-            setFormIsSubmitting(false);
-          } else {
-            setSubmitMessage(data.message);
-            setFormIsSubmitting(false);
-          }
+          setFormSubmitState({
+            formIsSubmitting: false,
+            submitMessage:
+              data?.message !== undefined
+                ? data.message
+                : "Something went wrong, please let us know your issue by contacting us. So sorry!",
+          });
         });
     },
   });
 
   return (
     <Box width="100%" maxWidth="800px" margin="auto">
-      {formIsSubmitting ? (
+      {formSubmitState.formIsSubmitting ? (
         <CircularProgress />
       ) : (
         <form action="POST" onSubmit={formik.handleSubmit}>
-          <p>{submitMessage}</p>
+          <p>{formSubmitState.submitMessage}</p>
           <Typography variant="h2" gutterBottom={true}>
             Login
           </Typography>
@@ -98,4 +115,4 @@ function Login(): ReactElement {
   );
 }
 
-export { Login };
+export {Login};

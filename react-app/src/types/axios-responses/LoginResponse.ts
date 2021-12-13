@@ -10,4 +10,4 @@ interface AuthenticatedUser {
   jsonWebToken: string;
 }
 
-export type { LoginResponse };
+export type { LoginResponse, AuthenticatedUser };
