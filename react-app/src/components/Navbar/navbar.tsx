@@ -1,31 +1,58 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import { Link } from "react-router-dom";
-import { Settings } from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material";
+import { SettingsMenu } from "./settings-menu";
+import { MobilePagesMenu } from "./mobile-pages-menu";
+import { DesktopPagesMenu } from "./desktop-pages-menu";
+import { UserAxiosContext } from "../../contexts/UserAxiosContext";
+import { baseConfig } from "../../axios/axios";
 
 interface IPage {
   route: string;
   name: string;
+  onClickCallback?: () => void;
 }
 
-const pages: IPage[] = [
-  { route: "/register", name: "Register" },
-  { route: "/login", name: "Login" },
-];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
 const Navbar = () => {
+  const {userAxiosConfig, setAxiosConfig, setUserInfo} =
+    React.useContext(UserAxiosContext);
+
+  const {userInfo, axiosConfig} = userAxiosConfig;
+
+  const pages = (loggedIn: boolean): IPage[] => {
+    if (loggedIn) {
+      return [
+        {
+          route: "/login",
+          name: "Logout",
+          onClickCallback: () => {
+            if (setUserInfo !== null) {
+              setUserInfo({
+                id: null,
+                email: null,
+                jsonWebToken: null,
+              });
+            }
+
+            if (setAxiosConfig !== null) {
+              setAxiosConfig(baseConfig);
+            }
+          },
+        },
+      ];
+    } else {
+      return [
+        {route: "/register", name: "Register"},
+        {route: "/login", name: "Login"},
+      ];
+    }
+  };
+
+  const settings = ["Profile", "Account", "Dashboard"];
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -51,132 +78,41 @@ const Navbar = () => {
     setAnchorElUser(null);
   };
 
-  return (
-    <AppBar position="relative" style={{ top: 0 }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
-          >
-            Gemini Bot
-          </Typography>
+  if (axiosConfig == null) {
+    return <div>Loading...</div>;
+  } else {
+    return (
+      <AppBar position="relative" style={{top: 0}}>
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            <MobilePagesMenu
+              handleOpenNavMenu={handleOpenNavMenu}
+              anchorElNav={anchorElNav}
+              handleCloseNavMenu={handleCloseNavMenu}
+              pages={pages}
+              userInfo={userInfo}
+            />
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {pages.map((page, index) => (
-                <MenuItem key={index} onClick={handleCloseNavMenu}>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                      color: "white",
-                      display: "block",
-                      margin: 15,
-                    }}
-                    to={`${page.route}`}
-                  >
-                    <Typography variant="h5" textAlign="center">
-                      {page.name}
-                    </Typography>
-                  </Link>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
-          >
-            Gemini Bot
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page, index) => (
-              <Link
-                key={index}
-                onClick={handleCloseNavMenu}
-                style={{
-                  textDecoration: "none",
-                  color: "white",
-                  display: "block",
-                  paddingRight: 20,
-                }}
-                to={`${page.route}`}
-              >
-                {page.name}
-              </Link>
-            ))}
-          </Box>
+            <DesktopPagesMenu
+              pages={pages}
+              userInfo={userInfo}
+              handleCloseNavMenu={handleCloseNavMenu}
+            />
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Settings />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                  <Typography
-                    variant={smallerThanSmScreen ? "h6" : "h5"}
-                    gutterBottom={true}
-                    textAlign="center"
-                  >
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
-  );
+            <SettingsMenu
+              settings={settings}
+              handleCloseNavMenu={handleCloseNavMenu}
+              anchorElUser={anchorElUser}
+              handleCloseUserMenu={handleCloseUserMenu}
+              handleOpenUserMenu={handleOpenUserMenu}
+              smallerThanSmScreen={smallerThanSmScreen}
+            />
+          </Toolbar>
+        </Container>
+      </AppBar>
+    );
+  }
 };
 
-export { Navbar };
+export {Navbar};
+export type {IPage};

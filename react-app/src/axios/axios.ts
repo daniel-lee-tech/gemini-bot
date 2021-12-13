@@ -1,9 +1,9 @@
 import { urlPrefix } from "../constants/urls";
 import axios, { AxiosRequestConfig } from "axios";
 
-const axiosConfig: AxiosRequestConfig = { baseURL: urlPrefix() };
+const baseConfig: AxiosRequestConfig = { baseURL: urlPrefix() };
 
 const axiosInstance = (customConfig?: any) =>
-  axios.create({ ...axiosConfig, ...customConfig });
+  axios.create({ ...baseConfig, ...customConfig });
 
-export { axiosInstance, axiosConfig };
+export { axiosInstance, baseConfig };

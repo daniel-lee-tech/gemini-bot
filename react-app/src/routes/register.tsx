@@ -11,12 +11,13 @@ import { AxiosError, AxiosResponse } from "axios";
 import { userRegisterUrl } from "../constants/urls";
 import { axiosInstance } from "../axios/axios";
 import { RegisterResponse } from "../types/axios-responses/RegisterResponse";
-import { AxiosConfigContext } from "../contexts/AxiosContext";
+import { UserAxiosContext } from "../contexts/UserAxiosContext";
 
 function Register(): ReactElement {
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
-  const axiosContext = useContext(AxiosConfigContext);
+  const { userAxiosConfig } = useContext(UserAxiosContext);
+  const { axiosConfig } = userAxiosConfig;
 
   const formik = useFormik({
     initialValues: {
@@ -27,7 +28,7 @@ function Register(): ReactElement {
     validationSchema: RegisterDTOValidationSchema,
     onSubmit: (values: RegisterDTO) => {
       setFormIsSubmitting(true);
-      axiosInstance(axiosContext.axiosConfig)
+      axiosInstance(axiosConfig)
         .post(userRegisterUrl(), values)
         .then((successResponse: AxiosResponse<RegisterResponse>) => {
           const data: RegisterResponse = successResponse.data;
