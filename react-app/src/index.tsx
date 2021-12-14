@@ -10,6 +10,7 @@ import { RequireAuth } from "./security/require-auth";
 import { Transfers } from "./routes/transfers";
 import { RequireNotAuth } from "./security/require-not-auth";
 import { ApiKeys } from "./routes/api-keys";
+import { Trades } from "./routes/trades";
 
 function ProtectedRoute({
   path,
@@ -42,6 +43,7 @@ ReactDOM.render(
           {OnlyLoggedOut({ path: "register", element: <Register /> })}
           <Route path="protected/">
             {ProtectedRoute({ path: "transfers", element: <Transfers /> })}
+            {ProtectedRoute({ path: "trades", element: <Trades /> })}
             {ProtectedRoute({ path: "apikeys", element: <ApiKeys /> })}
             {ProtectedRoute({ path: "welcome", element: <h1>Welcome</h1> })}
           </Route>

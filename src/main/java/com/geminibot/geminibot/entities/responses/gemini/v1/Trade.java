@@ -4,21 +4,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class Trade {
-
-    //    "price": "3648.09",
-//            "amount": "0.0027343246",
-//            "timestamp": 1547232911,
-//            "timestampms": 1547232911021,
-//            "type": "Buy",
-//            "aggressor": True,
-//            "fee_currency": "USD",
-//            "fee_amount": "0.024937655575035",
-//            "tid": 107317526,
-//            "order_id": "107317524",
-//            "exchange": "gemini",
-//            "is_auction_fill": False,
-//            "is_clearing_fill": False,
-//            "symbol": "BTCUSD"
     private BigDecimal price;
     private BigDecimal amount;
     private BigInteger timestamp;

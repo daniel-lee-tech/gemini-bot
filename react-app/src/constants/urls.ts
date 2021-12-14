@@ -26,6 +26,14 @@ const transfersImportUrl = (): string => {
   return "/transfers/import";
 };
 
+const tradesUrl = (): string => {
+  return "/trades";
+};
+
+const tradesImportUrl = (): string => {
+  return "/trades/import";
+};
+
 export {
   urlPrefix,
   userRegisterUrl,
@@ -33,4 +41,6 @@ export {
   apiUrl,
   transfersUrl,
   transfersImportUrl,
+  tradesUrl,
+  tradesImportUrl,
 };

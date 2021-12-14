@@ -30,6 +30,11 @@ const Navbar = () => {
           route: "/protected/apikeys",
           name: "Api Keys",
         },
+        // ---- TRADES ---
+        {
+          route: "/protected/trades",
+          name: "Trades",
+        },
         // ---- TRANSFERS ---
         {
           route: "/protected/transfers",

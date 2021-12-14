@@ -2,7 +2,7 @@ package com.geminibot.geminibot.entities.responses.gemini.v1;
 
 import java.util.ArrayList;
 
-public class TradesResponse extends GeminiResponse {
+public class GeminiTradesResponse extends GeminiResponse {
     private ArrayList<Trade> trades = new ArrayList<>();
 
     public ArrayList<Trade> getTrades() {

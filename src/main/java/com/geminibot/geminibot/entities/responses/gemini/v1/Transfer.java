@@ -67,6 +67,7 @@ public class Transfer {
         this.method = method;
     }
 
+
     @Override
     public String toString() {
         return "Transfer{" +

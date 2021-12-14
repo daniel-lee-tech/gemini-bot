@@ -32,7 +32,6 @@ public class TransfersGeminiConsumer extends GeminiConsumer{
         // there is a high chance there is more trades to query
         while (transfersFromQuery.size() == 50) {
             sleep(5000);
-            ObjectMapper objectMapper = new ObjectMapper();
             var latestTransfer = (Transfer)transfersFromQuery.get(0);
             BigInteger latestTimeStamp = latestTransfer.getTimestampms();
 
