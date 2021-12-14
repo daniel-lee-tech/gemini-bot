@@ -17,14 +17,25 @@ interface IPage {
 }
 
 const Navbar = () => {
-  const {userAxiosConfig, setAxiosConfig, setUserInfo} =
+  const { userAxiosConfig, setAxiosConfig, setUserInfo } =
     React.useContext(UserAxiosContext);
 
-  const {userInfo, axiosConfig} = userAxiosConfig;
+  const { userInfo, axiosConfig } = userAxiosConfig;
 
   const pages = (loggedIn: boolean): IPage[] => {
     if (loggedIn) {
       return [
+        // ---- API KEYS ---
+        {
+          route: "/protected/apikeys",
+          name: "Api Keys",
+        },
+        // ---- TRANSFERS ---
+        {
+          route: "/protected/transfers",
+          name: "Transfers",
+        },
+        // ---- LOGOUT ---
         {
           route: "/login",
           name: "Logout",
@@ -45,8 +56,8 @@ const Navbar = () => {
       ];
     } else {
       return [
-        {route: "/register", name: "Register"},
-        {route: "/login", name: "Login"},
+        { route: "/register", name: "Register" },
+        { route: "/login", name: "Login" },
       ];
     }
   };
@@ -82,7 +93,7 @@ const Navbar = () => {
     return <div>Loading...</div>;
   } else {
     return (
-      <AppBar position="relative" style={{top: 0}}>
+      <AppBar position="relative" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <MobilePagesMenu
@@ -114,5 +125,5 @@ const Navbar = () => {
   }
 };
 
-export {Navbar};
-export type {IPage};
+export { Navbar };
+export type { IPage };

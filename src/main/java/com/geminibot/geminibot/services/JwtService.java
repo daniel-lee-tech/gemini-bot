@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geminibot.geminibot.entities.serializers.JwtAuthPayload;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.Base64;
 
@@ -53,4 +54,18 @@ public class JwtService {
     public boolean isExpiredToken(JwtAuthPayload jwtAuthPayload) {
         return Instant.now().getEpochSecond() > jwtAuthPayload.getExp();
     }
-}
+
+    public JwtAuthPayload serializeDecodedJwtPayload(HttpServletRequest httpServletRequest) throws JsonProcessingException {
+        String headerAuthorizationToken = httpServletRequest.getHeader("Authorization").substring(7).trim();
+        JWTVerifier verifier = JWT.require(algorithm)
+                .withIssuer("gemini-bot")
+                .build(); //Reusable verifier instance
+        DecodedJWT decodedJwt = verifier.verify(headerAuthorizationToken);
+
+        JwtAuthPayload jwtAuthPayload = serializeDecodedJwtPayload(decodedJwt);
+
+        String payload = new String(Base64.getDecoder().decode(decodedJwt.getPayload()));
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.readValue(payload, JwtAuthPayload.class);
+    }}

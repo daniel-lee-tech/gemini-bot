@@ -14,4 +14,8 @@ const userLoginUrl = (): string => {
   return "/user/login";
 };
 
-export { urlPrefix, userRegisterUrl, userLoginUrl };
+const apiUrl = (): string => {
+  return "/apikeys";
+};
+
+export { urlPrefix, userRegisterUrl, userLoginUrl, apiUrl };
