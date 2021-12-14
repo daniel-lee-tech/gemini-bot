@@ -20,27 +20,10 @@ function ApiKeys(): ReactElement {
 
   const { axiosConfig } = userAxiosConfig;
 
-  // Access the client
-  // const queryClient = useQueryClient();
-
-  // Queries
-  // const query = useQuery<AxiosResponse<ApiKeysResponse>, AxiosError<Response>>(
-  //   "todos",
-  //   () => fetchKeys(axiosConfig)
-  // );
-
   const { isLoading, error, data, isSuccess } = useQuery<
     Promise<ApiKeysResponse>,
     Response
   >("apiKeys", () => fetchKeys(axiosConfig));
-
-  // Mutations
-  // const mutation = useMutation(postTodo, {
-  //   onSuccess: () => {
-  //     // Invalidate and refetch
-  //     queryClient.invalidateQueries("todos");
-  //   },
-  // });
 
   if (isLoading) {
     return <span>Loading...</span>;

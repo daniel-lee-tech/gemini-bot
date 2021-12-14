@@ -85,8 +85,8 @@ public abstract class GeminiConsumer {
     }
 
     String create_nonce() {
-        long unixTime = Instant.now().getEpochSecond();
-        return Long.toString(unixTime * 1000);
+        long unixTime = Instant.now().toEpochMilli();
+        return Long.toString(unixTime);
     }
 
     protected String bytesToHex(byte[] bytes) {
