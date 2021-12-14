@@ -1,7 +1,13 @@
 import { AxiosRequestConfig } from "axios";
 import { ApiKey } from "../schemas/ApiKey";
 import { axiosInstance } from "./axios";
-import { apiUrl, transfersImportUrl, transfersUrl } from "../constants/urls";
+import {
+  apiUrl,
+  tradesImportUrl,
+  tradesUrl,
+  transfersImportUrl,
+  transfersUrl,
+} from "../constants/urls";
 import { ApiKeysResponse } from "../types/axios-responses/ApiKeysResponse";
 import { TransfersResponse } from "../types/axios-responses/TransfersResponse";
 
@@ -36,4 +42,27 @@ function importTransfers(
     .then((response) => response.data);
 }
 
-export { addApiKey, fetchKeys, fetchTransfers, importTransfers };
+function fetchTrades(
+  axiosConfig: AxiosRequestConfig
+): Promise<TransfersResponse> {
+  return axiosInstance(axiosConfig)
+    .get(tradesUrl())
+    .then((response) => response.data);
+}
+
+function importTrades(
+  axiosConfig: AxiosRequestConfig
+): Promise<TransfersResponse> {
+  return axiosInstance(axiosConfig)
+    .get(tradesImportUrl())
+    .then((response) => response.data);
+}
+
+export {
+  addApiKey,
+  fetchKeys,
+  fetchTransfers,
+  importTransfers,
+  fetchTrades,
+  importTrades,
+};

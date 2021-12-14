@@ -3,11 +3,11 @@ import { useContext } from "react";
 import { UserAxiosContext } from "../contexts/UserAxiosContext";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Response } from "../types/axios-responses/Response";
-import { fetchTransfers, importTransfers } from "../axios/queries";
+import { fetchTrades, importTrades } from "../axios/queries";
 import { TransfersResponse } from "../types/axios-responses/TransfersResponse";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 
-function Transfers() {
+function Trades() {
   const { userAxiosConfig } = useContext(UserAxiosContext);
   const { axiosConfig } = userAxiosConfig;
 
@@ -15,12 +15,12 @@ function Transfers() {
 
   const mutation = useMutation(
     () => {
-      return importTransfers(axiosConfig);
+      return importTrades(axiosConfig);
     },
     {
       onSuccess: () => {
         // Invalidate and refetch
-        queryClient.invalidateQueries("transfers");
+        queryClient.invalidateQueries("trades");
       },
     }
   );
@@ -32,7 +32,7 @@ function Transfers() {
   const { isLoading, error, data, isSuccess } = useQuery<
     Promise<TransfersResponse>,
     Response
-  >("transfers", () => fetchTransfers(axiosConfig));
+  >("trades", () => fetchTrades(axiosConfig));
 
   if (isLoading) {
     return <span>Loading...</span>;
@@ -58,10 +58,10 @@ function Transfers() {
     }
 
     return (
-      <div style={{ display: "flex", height: "100%", overflowX: "hidden" }}>
+      <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
           <Typography sx={{ marginY: 4 }} variant="h2" gutterBottom={true}>
-            Transfers
+            Trades
           </Typography>
           <Box
             sx={{
@@ -85,7 +85,8 @@ function Transfers() {
           {rows.length === 0 && mutation.isLoading
             ? "Importing all your trades may take a long time, please be patient..."
             : rows.length === 0 &&
-              "Looks like you don't have any transfers, please import or start your first transfer in gemini!."}
+              "Looks like you don't have any Trades, please import or start your first Trade in gemini!."}
+
           <DataGrid
             autoHeight
             rows={rows}
@@ -102,4 +103,4 @@ function Transfers() {
   return <span>Error: {error?.message}</span>;
 }
 
-export { Transfers };
+export { Trades };
