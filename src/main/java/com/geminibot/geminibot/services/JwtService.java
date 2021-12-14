@@ -36,6 +36,7 @@ public class JwtService {
                     .withIssuer("gemini-bot")
                     .build(); //Reusable verifier instance
             DecodedJWT decodedJwt = verifier.verify(token);
+            System.out.println(decodedJwt);
 
             JwtAuthPayload jwtAuthPayload = serializeDecodedJwtPayload(decodedJwt);
             return !isExpiredToken(jwtAuthPayload);

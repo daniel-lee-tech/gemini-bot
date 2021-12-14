@@ -18,4 +18,19 @@ const apiUrl = (): string => {
   return "/apikeys";
 };
 
-export { urlPrefix, userRegisterUrl, userLoginUrl, apiUrl };
+const transfersUrl = (): string => {
+  return "/transfers";
+};
+
+const transfersImportUrl = (): string => {
+  return "/transfers/import";
+};
+
+export {
+  urlPrefix,
+  userRegisterUrl,
+  userLoginUrl,
+  apiUrl,
+  transfersUrl,
+  transfersImportUrl,
+};

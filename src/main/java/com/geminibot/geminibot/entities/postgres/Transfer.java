@@ -1,7 +1,5 @@
 package com.geminibot.geminibot.entities.postgres;
 
-import com.geminibot.geminibot.entities.responses.gemini.v1.TransfersResponse;
-
 import javax.persistence.*;
 import java.math.BigInteger;
 
@@ -19,10 +17,26 @@ public class Transfer {
     private String type;
     private String advanced;
     private BigInteger timestampms;
+    @Column(unique = true)
     private BigInteger eid;
     private String currency;
     private double amount;
     private String method;
+
+    public Transfer(com.geminibot.geminibot.entities.responses.gemini.v1.Transfer transfer, User user) {
+        this.type = transfer.getType();
+        this.advanced = transfer.getAdvanced();
+        this.timestampms = transfer.getTimestampms();
+        this.eid = transfer.getEid();
+        this.currency = transfer.getCurrency();
+        this.amount = transfer.getAmount();
+        this.method = transfer.getMethod();
+        this.user = user;
+    }
+
+    public Transfer() {
+
+    }
 
     public Long getId() {
         return id;

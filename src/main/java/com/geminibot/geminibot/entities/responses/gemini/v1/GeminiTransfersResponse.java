@@ -2,7 +2,7 @@ package com.geminibot.geminibot.entities.responses.gemini.v1;
 
 import java.util.ArrayList;
 
-public class TransfersResponse extends GeminiResponse {
+public class GeminiTransfersResponse extends GeminiResponse {
     private ArrayList<Transfer> transfers;
 
     public ArrayList<Transfer> getTransfers() {

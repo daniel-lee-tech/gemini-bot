@@ -42,6 +42,7 @@ public class RequiresAuthorizationTokenAspect {
             assert jwtService.verifyToken(headerAuthorizationToken);
             return joinPoint.proceed();
         } catch(Exception exception) {
+            System.out.println(exception);
             return new ResponseEntity<String>("JSON web token is not present or valid in request headers. Please login to get a new JSON web token.", HttpStatus.UNAUTHORIZED);
         }
     }

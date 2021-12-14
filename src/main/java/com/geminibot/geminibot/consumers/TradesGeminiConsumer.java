@@ -15,20 +15,24 @@ import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static java.lang.Thread.sleep;
+
 public class TradesGeminiConsumer extends GeminiConsumer {
     public TradesGeminiConsumer(String publicKey, String privateKey) {
         super(publicKey, privateKey);
     }
 
-    public TradesResponse getAllTrades() throws InvalidKeyException, HttpClientErrorException {
+    public TradesResponse getAllTrades() throws InvalidKeyException, HttpClientErrorException, InterruptedException {
         TradesResponse tradesResponse = getFirst500Trades();
 
         var tradesFromQuery = tradesResponse.getTrades();
+        System.out.println(tradesFromQuery);
 
         // reasoning: 500 trades is a the max per call
         // so if call has 500 trades,
         // there is a high chance there is more trades to query
         while (tradesFromQuery.size() == 500) {
+            sleep(5000);
             ObjectMapper objectMapper = new ObjectMapper();
             var latestTrade = (Trade)tradesFromQuery.get(0);
 

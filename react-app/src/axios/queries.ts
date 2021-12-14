@@ -1,8 +1,9 @@
 import { AxiosRequestConfig } from "axios";
 import { ApiKey } from "../schemas/ApiKey";
 import { axiosInstance } from "./axios";
-import { apiUrl } from "../constants/urls";
+import { apiUrl, transfersImportUrl, transfersUrl } from "../constants/urls";
 import { ApiKeysResponse } from "../types/axios-responses/ApiKeysResponse";
+import { TransfersResponse } from "../types/axios-responses/TransfersResponse";
 
 function addApiKey(
   axiosConfig: AxiosRequestConfig,
@@ -19,4 +20,20 @@ function fetchKeys(axiosConfig: AxiosRequestConfig): Promise<ApiKeysResponse> {
     .then((response) => response.data);
 }
 
-export { addApiKey, fetchKeys };
+function fetchTransfers(
+  axiosConfig: AxiosRequestConfig
+): Promise<TransfersResponse> {
+  return axiosInstance(axiosConfig)
+    .get(transfersUrl())
+    .then((response) => response.data);
+}
+
+function importTransfers(
+  axiosConfig: AxiosRequestConfig
+): Promise<TransfersResponse> {
+  return axiosInstance(axiosConfig)
+    .get(transfersImportUrl())
+    .then((response) => response.data);
+}
+
+export { addApiKey, fetchKeys, fetchTransfers, importTransfers };

@@ -5,7 +5,7 @@ function RequireNotAuth({ children }: { children: JSX.Element }) {
   let user = useUser();
   let location = useLocation();
 
-  if (user.id != null || user.id !== undefined || user.id) {
+  if (user.id) {
     // Redirect them to the /login page, but save the current location they were
     // trying to go to when they were redirected. This allows us to send them
     // along to that page after they login, which is a nicer user experience
