@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.MissingFormatArgumentException;
+
 @Aspect
 @Component
 public class RequiresAuthorizationTokenAspect {
@@ -31,7 +33,9 @@ public class RequiresAuthorizationTokenAspect {
             }
         }
 
-        assert hasHttpServletRequest;
+        if (!hasHttpServletRequest) {
+            throw new MissingFormatArgumentException("Http Servlet argument must be present in controller action");
+        }
 
         try {
             String headerAuthorizationToken = httpServletRequest.getHeader("Authorization").substring(7).trim();

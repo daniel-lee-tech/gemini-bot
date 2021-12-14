@@ -1,7 +1,7 @@
 package com.geminibot.geminibot.entities.responses.restcontrollers;
 
-import com.geminibot.geminibot.datatransferobjects.RegisterDTO;
-import com.geminibot.geminibot.entities.postgres.User;
+import com.geminibot.geminibot.entities.responses.entities.RegisterResponseEntity;
+
 public class RegisterResponse extends RestControllerResponse<RegisterResponseEntity> {
     public RegisterResponse(String message, boolean error, RegisterResponseEntity entity) {
         this.setMessage(message);

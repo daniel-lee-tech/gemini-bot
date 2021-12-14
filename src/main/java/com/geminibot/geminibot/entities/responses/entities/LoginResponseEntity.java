@@ -1,4 +1,4 @@
-package com.geminibot.geminibot.entities.responses.restcontrollers;
+package com.geminibot.geminibot.entities.responses.entities;
 
 import com.geminibot.geminibot.datatransferobjects.LoginDTO;
 import com.geminibot.geminibot.entities.postgres.User;

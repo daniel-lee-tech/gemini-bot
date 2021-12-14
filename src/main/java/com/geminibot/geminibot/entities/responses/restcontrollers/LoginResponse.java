@@ -1,6 +1,7 @@
 package com.geminibot.geminibot.entities.responses.restcontrollers;
 
 import com.geminibot.geminibot.datatransferobjects.LoginDTO;
+import com.geminibot.geminibot.entities.responses.entities.LoginResponseEntity;
 
 public class LoginResponse extends RestControllerResponse<LoginResponseEntity>{
 
