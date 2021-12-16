@@ -16,16 +16,16 @@ public class User {
     private boolean emailVerified;
 
     @Column(unique = true)
-    private UUID emailVerificationToken;
+    private String emailVerificationToken;
 
     public User(String email, String plainTextPassword) {
         this.email = email;
         this.setPasswordDigest(plainTextPassword);
-        this.emailVerificationToken = UUID.randomUUID();
+        this.emailVerificationToken = UUID.randomUUID().toString();
     }
 
     public User() {
-        this.emailVerificationToken = UUID.randomUUID();
+        this.emailVerificationToken = UUID.randomUUID().toString();
     }
 
     public Long getId() {
@@ -60,11 +60,11 @@ public class User {
         this.emailVerified = activated;
     }
 
-    public UUID getEmailVerificationToken() {
+    public String getEmailVerificationToken() {
         return emailVerificationToken;
     }
 
-    public void setEmailVerificationToken(UUID activationToken) {
+    public void setEmailVerificationToken(String activationToken) {
         this.emailVerificationToken = activationToken;
     }
 

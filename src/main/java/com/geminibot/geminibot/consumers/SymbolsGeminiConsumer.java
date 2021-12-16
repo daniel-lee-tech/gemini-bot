@@ -10,6 +10,9 @@ public class SymbolsGeminiConsumer extends GeminiConsumer {
     public SymbolsGeminiConsumer(String publicKey, String privateKey) {
         super("NO KEYS NEEDED", "NO KEYS NEEDED");
     }
+    public SymbolsGeminiConsumer() {
+        super("NO KEYS NEEDED", "NO KEYS NEEDED");
+    }
 
     public String[] getSymbolsList() {
         var fullUrl = geminiUrls.get(GeminiUrlsEnum.URL_PREFIX) + geminiUrls.get(GeminiUrlsEnum.SYMBOLS_URL);
@@ -20,6 +23,9 @@ public class SymbolsGeminiConsumer extends GeminiConsumer {
         ArrayList<SymbolResponse> symbolsList = new ArrayList<>();
 
         for (String symbol: this.getSymbolsList()) {
+            if (!symbolsList.isEmpty()) {
+                System.out.println(symbolsList.get(symbolsList.size() - 1));
+            }
 
             var fullUrl = geminiUrls.get(GeminiUrlsEnum.URL_PREFIX) + geminiUrls.get(GeminiUrlsEnum.SYMBOL_DETAILS_URL) + "/" + symbol;
 

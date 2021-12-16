@@ -10,5 +10,5 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, Long> {
     public User findByEmail(String email);
 
-    public User findByEmailVerificationToken(UUID emailVerificationToken);
+    public User findByEmailVerificationToken(String emailVerificationToken);
 }

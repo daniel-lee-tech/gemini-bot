@@ -1,9 +1,12 @@
 package com.geminibot.geminibot.controllers;
 
 import com.geminibot.geminibot.annotations.RequiresAuthorizationToken;
+import com.geminibot.geminibot.consumers.SymbolsGeminiConsumer;
+import com.geminibot.geminibot.entities.postgres.Symbol;
 import com.geminibot.geminibot.entities.postgres.User;
 import com.geminibot.geminibot.entities.responses.restcontrollers.ErrorResponse;
 import com.geminibot.geminibot.entities.responses.restcontrollers.RestControllerResponse;
+import com.geminibot.geminibot.repositories.SymbolRepository;
 import com.geminibot.geminibot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,10 +21,20 @@ public class TestController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    SymbolRepository symbolRepository;
+
     @GetMapping("/test")
-    public ResponseEntity<User> createUserAndShow() {
-        User user = userRepository.save(new User("test", "password"));
-        return new ResponseEntity<User>(user, HttpStatus.valueOf(200));
+    public String createUserAndShow() {
+        var list = new SymbolsGeminiConsumer().getSymbolsListWithDetails();
+        for (var item : list) {
+            System.out.println(item);
+            symbolRepository.save(new Symbol(item));
+        }
+
+
+//        User user = userRepository.save(new User("test", "password"));
+        return "hello";
     }
 
     @GetMapping("/test/protected")

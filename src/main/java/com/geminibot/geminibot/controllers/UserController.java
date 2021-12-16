@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-import java.util.UUID;
 
 @RestController
 public class UserController {
@@ -36,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping("/user/activate/{activationToken}")
-    public void getUserActivate(@PathVariable("activationToken") UUID activationToken, HttpServletResponse httpServletResponse) {
+    public void getUserActivate(@PathVariable("activationToken") String activationToken, HttpServletResponse httpServletResponse) {
         User possibleUser = userRepository.findByEmailVerificationToken(activationToken);
 
         try {
@@ -54,7 +53,8 @@ public class UserController {
         User user = userRepository.save(possibleUser);
 
        try {
-            httpServletResponse.sendRedirect("render login page with message saying user has been activated");
+           // TODO: change me in production!!!
+            httpServletResponse.sendRedirect("http://localhost:3000/login");
        } catch (Exception exception) {
            // TODO: handle this error more gracefully
            System.out.println("Something happened");

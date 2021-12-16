@@ -40,6 +40,11 @@ const Navbar = () => {
           route: "/protected/transfers",
           name: "Transfers",
         },
+        // ---- API KEYS ---
+        {
+          route: "/protected/networth",
+          name: "Net Worth",
+        },
         // ---- LOGOUT ---
         {
           route: "/login",
