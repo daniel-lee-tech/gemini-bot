@@ -2,6 +2,7 @@ package com.geminibot.geminibot.consumers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geminibot.geminibot.consumers.constants.GeminiUrlsEnum;
+import com.geminibot.geminibot.entities.responses.gemini.v1.Trade;
 import com.geminibot.geminibot.entities.responses.gemini.v1.Transfer;
 import com.geminibot.geminibot.entities.responses.gemini.v1.GeminiTransfersResponse;
 import org.springframework.core.ParameterizedTypeReference;
@@ -13,6 +14,7 @@ import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import static java.lang.Thread.sleep;
 
@@ -25,17 +27,21 @@ public class TransfersGeminiConsumer extends GeminiConsumer{
         GeminiTransfersResponse transfersResponse = this.get50TradesFromTimeStamp(ts);
 
         var transfersFromQuery = transfersResponse.getTransfers();
-        System.out.println(transfersFromQuery);
 
-        // reasoning: 50 trades is a the max per call
-        // so if call has 50 trades,
-        // there is a high chance there is more trades to query
-        while (transfersFromQuery.size() == 50) {
+        var timestamps = new ArrayList<BigInteger>();
+        timestamps.add(null);
+        timestamps.add(BigInteger.valueOf(0));
+        BigInteger latestTimestamp = null;
+
+        while (!Objects.equals(timestamps.get(timestamps.size() - 1), latestTimestamp) || !Objects.equals(timestamps.get(timestamps.size() - 2), latestTimestamp)) {
             sleep(5000);
             var latestTransfer = (Transfer)transfersFromQuery.get(0);
-            BigInteger latestTimeStamp = latestTransfer.getTimestampms();
 
-            GeminiTransfersResponse next50Transfers = get50TradesFromTimeStamp(latestTimeStamp.add(BigInteger.ONE));
+            latestTimestamp = latestTransfer.getTimestampms();
+            timestamps.add(latestTimestamp);
+            System.out.println("LATEST TIMESTAMP=" + latestTimestamp);
+
+            GeminiTransfersResponse next50Transfers = get50TradesFromTimeStamp(latestTimestamp);
             transfersFromQuery = next50Transfers.getTransfers();
             transfersResponse.appendTransfers(transfersFromQuery);
         }
@@ -48,28 +54,33 @@ public class TransfersGeminiConsumer extends GeminiConsumer{
         GeminiTransfersResponse transfersResponse = this.getFirst50Transfers();
 
         var transfersFromQuery = transfersResponse.getTransfers();
-        System.out.println(transfersFromQuery);
 
-        // reasoning: 50 trades is a the max per call
-        // so if call has 50 trades,
-        // there is a high chance there is more trades to query
-        while (transfersFromQuery.size() == 50) {
+        var timestamps = new ArrayList<BigInteger>();
+        timestamps.add(null);
+        timestamps.add(BigInteger.valueOf(0));
+        BigInteger latestTimestamp = null;
+
+        while (!Objects.equals(timestamps.get(timestamps.size() - 1), latestTimestamp) || !Objects.equals(timestamps.get(timestamps.size() - 2), latestTimestamp)) {
             sleep(5000);
             ObjectMapper objectMapper = new ObjectMapper();
             var latestTransfer = (Transfer)transfersFromQuery.get(0);
-            BigInteger latestTimeStamp = latestTransfer.getTimestampms();
 
-            GeminiTransfersResponse next50Transfers = get50TradesFromTimeStamp(latestTimeStamp.add(BigInteger.ONE));
+            latestTimestamp = latestTransfer.getTimestampms();
+            timestamps.add(latestTimestamp);
+            System.out.println("LATEST TIMESTAMP=" + latestTimestamp);
+
+
+            GeminiTransfersResponse next50Transfers = get50TradesFromTimeStamp(latestTimestamp);
             transfersFromQuery = next50Transfers.getTransfers();
             transfersResponse.appendTransfers(transfersFromQuery);
         }
 
+        System.out.println(transfersResponse);
         return transfersResponse;
     }
 
     public GeminiTransfersResponse getFirst50Transfers() throws InvalidKeyException {
-        BigInteger createdDate = new AccountGeminiConsumer(this).getAccountCreationDate();
-        return this.get50TradesFromTimeStamp(createdDate);
+        return this.get50TradesFromTimeStamp(BigInteger.valueOf(0));
 
     }
 

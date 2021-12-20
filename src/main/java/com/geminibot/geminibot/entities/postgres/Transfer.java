@@ -17,7 +17,6 @@ public class Transfer {
     private String type;
     private String advanced;
     private BigInteger timestampms;
-    @Column(unique = true)
     private BigInteger eid;
     private String currency;
     private double amount;
@@ -108,5 +107,20 @@ public class Transfer {
 
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    @Override
+    public String toString() {
+        return "Transfer{" +
+                "id=" + id +
+                ", user=" + user +
+                ", type='" + type + '\'' +
+                ", advanced='" + advanced + '\'' +
+                ", timestampms=" + timestampms +
+                ", eid=" + eid +
+                ", currency='" + currency + '\'' +
+                ", amount=" + amount +
+                ", method='" + method + '\'' +
+                '}';
     }
 }

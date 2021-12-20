@@ -1,15 +1,14 @@
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import { useContext } from "react";
-import { UserAxiosContext } from "../contexts/UserAxiosContext";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Response } from "../types/axios-responses/Response";
 import { fetchTransfers, importTransfers } from "../axios/queries";
 import { TransfersResponse } from "../types/axios-responses/TransfersResponse";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { useAppSelector } from "../redux/hooks/redux";
+import { selectAxiosConfig } from "../redux/slices/axiosSlice";
 
 function Transfers() {
-  const { userAxiosConfig } = useContext(UserAxiosContext);
-  const { axiosConfig } = userAxiosConfig;
+  const axiosConfig = useAppSelector(selectAxiosConfig);
 
   const queryClient = useQueryClient();
 
@@ -51,7 +50,6 @@ function Transfers() {
           field: e,
           headerName: e,
           flex: 1,
-          resizable: true,
         }));
       /* @ts-ignore */
       rows = data.entity.map((x: Transfer) => x);

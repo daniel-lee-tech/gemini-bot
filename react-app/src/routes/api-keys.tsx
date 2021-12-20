@@ -5,20 +5,19 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-import { ReactElement, useContext } from "react";
+import { ReactElement } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ApiKeysForm } from "../components/ApiKeysForm/api-keys-form";
-import { UserAxiosContext } from "../contexts/UserAxiosContext";
 import { useQuery } from "react-query";
 import { ApiKeysResponse } from "../types/axios-responses/ApiKeysResponse";
 import { Response } from "../types/axios-responses/Response";
 import { fetchKeys } from "../axios/queries";
 import { ApiKey } from "../schemas/ApiKey";
+import { useAppSelector } from "../redux/hooks/redux";
+import { selectAxiosConfig } from "../redux/slices/axiosSlice";
 
 function ApiKeys(): ReactElement {
-  const { userAxiosConfig } = useContext(UserAxiosContext);
-
-  const { axiosConfig } = userAxiosConfig;
+  const axiosConfig = useAppSelector(selectAxiosConfig);
 
   const { isLoading, error, data, isSuccess } = useQuery<
     Promise<ApiKeysResponse>,
@@ -80,4 +79,4 @@ function ApiKeys(): ReactElement {
   return <span>Error: {error?.message}</span>;
 }
 
-export {ApiKeys};
+export { ApiKeys };

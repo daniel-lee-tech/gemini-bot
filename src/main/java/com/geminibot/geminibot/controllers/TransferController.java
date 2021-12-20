@@ -67,8 +67,11 @@ public class TransferController {
                 }
 
                 for (var transfer : response.getTransfers()) {
-                    var savedTransfer = transferRepository.save(new Transfer(transfer, user.get()));
-                    transfersResponse.getEntity().add(savedTransfer);
+                    if (transferRepository.findByTypeAndAdvancedAndTimestampmsAndEidAndCurrencyAndAmountAndMethod(transfer.getType(), transfer.getAdvanced(), transfer.getTimestampms(), transfer.getEid(), transfer.getCurrency(), transfer.getAmount(), transfer.getMethod()).isEmpty()) {
+                        var savedTransfer = transferRepository.save(new Transfer(transfer, user.get()));
+                        transfersResponse.getEntity().add(savedTransfer);
+                    }
+
                 }
 
                 return new ResponseEntity<>(transfersResponse, HttpStatus.OK);

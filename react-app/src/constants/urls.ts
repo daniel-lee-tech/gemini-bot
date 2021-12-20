@@ -34,6 +34,10 @@ const tradesImportUrl = (): string => {
   return "/trades/import";
 };
 
+const netWorthCurrenciesUrl = (): string => {
+  return "/networth/currencies";
+};
+
 export {
   urlPrefix,
   userRegisterUrl,
@@ -43,4 +47,5 @@ export {
   transfersImportUrl,
   tradesUrl,
   tradesImportUrl,
+  netWorthCurrenciesUrl,
 };

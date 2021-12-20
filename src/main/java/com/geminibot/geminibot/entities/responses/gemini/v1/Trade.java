@@ -1,5 +1,7 @@
 package com.geminibot.geminibot.entities.responses.gemini.v1;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -18,6 +20,8 @@ public class Trade {
     private boolean is_auction_fill;
     private boolean is_clearing_fill;
     private String symbol;
+    @JsonProperty(value = "break")
+    private String geminiBreak;
 
     public BigDecimal getPrice() {
         return price;
@@ -131,6 +135,14 @@ public class Trade {
         this.symbol = symbol;
     }
 
+    public String getGeminiBreak() {
+        return geminiBreak;
+    }
+
+    public void setGeminiBreak(String geminiBreak) {
+        this.geminiBreak = geminiBreak;
+    }
+
     @Override
     public String toString() {
         return "Trade{" +
@@ -148,6 +160,7 @@ public class Trade {
                 ", is_auction_fill=" + is_auction_fill +
                 ", is_clearing_fill=" + is_clearing_fill +
                 ", symbol='" + symbol + '\'' +
+                ", geminiBreak='" + geminiBreak + '\'' +
                 '}';
     }
 }

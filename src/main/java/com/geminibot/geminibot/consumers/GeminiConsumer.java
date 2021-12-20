@@ -18,6 +18,8 @@ import java.util.Base64;
 import java.util.EnumMap;
 import java.util.HashMap;
 
+import static java.lang.Thread.sleep;
+
 
 public abstract class GeminiConsumer {
     protected final EnumMap<GeminiUrlsEnum, String> geminiUrls = new GeminiEnumMap().getInstance();
@@ -85,8 +87,16 @@ public abstract class GeminiConsumer {
     }
 
     String create_nonce() {
-        long unixTime = Instant.now().toEpochMilli();
-        return Long.toString(unixTime);
+        try {
+            sleep(1);
+            long unixTime = Instant.now().toEpochMilli();
+            return Long.toString(unixTime);
+        } catch (InterruptedException e) {
+            // TODO: add rollbar here!
+            e.printStackTrace();
+            long unixTime = Instant.now().toEpochMilli();
+            return Long.toString(unixTime);
+        }
     }
 
     protected String bytesToHex(byte[] bytes) {

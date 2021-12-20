@@ -28,21 +28,24 @@ interface IUserAxiosContext {
 }
 
 const initialContext: IUserAxiosContext = {
-  userAxiosConfig: { userInfo: initialUserInfo, axiosConfig: baseConfig },
-  setUserAxiosConfig: (_) => {},
-  setUserInfo: (_) => {},
-  setAxiosConfig: (_) => {},
+  userAxiosConfig: {userInfo: initialUserInfo, axiosConfig: baseConfig},
+  setUserAxiosConfig: (_) => {
+  },
+  setUserInfo: (_) => {
+  },
+  setAxiosConfig: (_) => {
+  },
 };
 
 const UserAxiosContext = createContext(initialContext);
 
-function UserAxiosContextProvider({ children }: { children: React.ReactNode }) {
+function UserAxiosContextProvider({children}: { children: React.ReactNode }) {
   // this gets overridden during runtime when jsx is rendered
   const [userAxiosConfig, setUserAxiosConfig] = useState(initialContext);
 
   function setUserAxiosConfigWrapper(newState: IUserAxiosContextState) {
-    const newValue = { ...userAxiosConfig };
-    newValue.userAxiosConfig = { ...newState };
+    const newValue = {...userAxiosConfig};
+    newValue.userAxiosConfig = {...newState};
     setUserAxiosConfig(newValue);
 
     localStorage.setItem(
@@ -57,7 +60,7 @@ function UserAxiosContextProvider({ children }: { children: React.ReactNode }) {
   }
 
   function setAxiosConfigWrapper(newConfig: AxiosRequestConfig) {
-    const newValue = { ...userAxiosConfig };
+    const newValue = {...userAxiosConfig};
     newValue.userAxiosConfig.axiosConfig = {
       ...newValue.userAxiosConfig.axiosConfig,
       ...newConfig,
@@ -72,7 +75,7 @@ function UserAxiosContextProvider({ children }: { children: React.ReactNode }) {
   }
 
   function setUserInfoWrapper(newUserInfo: IUserInfo) {
-    const newValue = { ...userAxiosConfig };
+    const newValue = {...userAxiosConfig};
     newValue.userAxiosConfig.userInfo = {
       ...newValue.userAxiosConfig.userInfo,
       ...newUserInfo,
@@ -110,6 +113,7 @@ function UserAxiosContextProvider({ children }: { children: React.ReactNode }) {
     checkLocalStorageOnBootup();
   }, [checkLocalStorageOnBootup]);
 
+
   return (
     <UserAxiosContext.Provider
       value={{
@@ -124,5 +128,5 @@ function UserAxiosContextProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export { UserAxiosContext, UserAxiosContextProvider };
-export type { IUserInfo, IUserAxiosContext };
+export {UserAxiosContext, UserAxiosContextProvider};
+export type {IUserInfo, IUserAxiosContext};

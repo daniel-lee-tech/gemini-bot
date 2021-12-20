@@ -21,7 +21,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -61,15 +60,21 @@ public class TradesController {
 
                 if (latestTrade.isPresent()) {
                     var latestTimestamp = latestTrade.get().getTimestampms();
-                    response = consumer.getAllTradesSinceTimestamp(latestTimestamp.add(BigInteger.valueOf(1)));
+                    response = consumer.getAllTradesSinceTimestamp(latestTimestamp);
                 } else {
                     response = consumer.getAllTradesForAccount();
                 }
 
                 for (var trade : response.getTrades()) {
-                    var savedTrade = tradeRepository.save(new Trade(trade, user.get()));
-                    tradesResponse.getEntity().add(savedTrade);
+
+                    if (tradeRepository.findByTid(trade.getTid()).isEmpty()) {
+                        var savedTrade = tradeRepository.save(new Trade(trade, user.get()));
+                        tradesResponse.getEntity().add(savedTrade);
+                    }
+
                 }
+
+                System.out.println(tradesResponse);
 
                 return new ResponseEntity<>(tradesResponse, HttpStatus.OK);
             } else {

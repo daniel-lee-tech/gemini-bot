@@ -14,4 +14,14 @@ public class TradesResponse extends RestControllerResponse<ArrayList<com.geminib
     public void setEntity(ArrayList<Trade> entity) {
         this.entity = entity;
     }
+
+    @Override
+    public String toString() {
+        return "TradesResponse{" +
+                "count='" + entity.size() + '\'' +
+                "message='" + message + '\'' +
+                ", error=" + error +
+                ", entity=" + entity +
+                '}';
+    }
 }

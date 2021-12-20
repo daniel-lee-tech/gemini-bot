@@ -27,9 +27,11 @@ public class Trade {
     private BigInteger tid;
     private BigInteger orderId;
     private String exchange;
-    private boolean isAuctionFill;
-    private boolean isClearingFill;
+    @Column(nullable = true)
+    private boolean auctionFill;
+    private boolean clearingFill;
     private String symbol;
+    private String geminiBreak;
 
     public Trade(com.geminibot.geminibot.entities.responses.gemini.v1.Trade trade, User user) {
         this.type = trade.getType();
@@ -43,9 +45,10 @@ public class Trade {
         this.tid = trade.getTid();
         this.orderId = trade.getOrder_id();
         this.exchange = trade.getExchange();
-        this.isAuctionFill = trade.isIs_auction_fill();
-        this.isClearingFill = trade.isIs_clearing_fill();
+        this.auctionFill = trade.isIs_auction_fill();
+        this.clearingFill = trade.isIs_clearing_fill();
         this.symbol = trade.getSymbol();
+        this.geminiBreak = trade.getGeminiBreak();
 
         this.user = user;
     }
@@ -159,19 +162,19 @@ public class Trade {
     }
 
     public boolean isAuctionFill() {
-        return isAuctionFill;
+        return auctionFill;
     }
 
     public void setAuctionFill(boolean auctionFill) {
-        isAuctionFill = auctionFill;
+        this.auctionFill = auctionFill;
     }
 
     public boolean isClearingFill() {
-        return isClearingFill;
+        return clearingFill;
     }
 
     public void setClearingFill(boolean clearingFill) {
-        isClearingFill = clearingFill;
+        this.clearingFill = clearingFill;
     }
 
     public String getSymbol() {
@@ -180,5 +183,36 @@ public class Trade {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public String getGeminiBreak() {
+        return geminiBreak;
+    }
+
+    public void setGeminiBreak(String geminiBreak) {
+        this.geminiBreak = geminiBreak;
+    }
+
+    @Override
+    public String toString() {
+        return "Trade{" +
+                "id=" + id +
+                ", user=" + user +
+                ", price=" + price +
+                ", amount=" + amount +
+                ", timestamp=" + timestamp +
+                ", timestampms=" + timestampms +
+                ", type='" + type + '\'' +
+                ", aggressor=" + aggressor +
+                ", feeCurrency='" + feeCurrency + '\'' +
+                ", feeAmount=" + feeAmount +
+                ", tid=" + tid +
+                ", orderId=" + orderId +
+                ", exchange='" + exchange + '\'' +
+                ", isAuctionFill=" + auctionFill +
+                ", isClearingFill=" + clearingFill +
+                ", symbol='" + symbol + '\'' +
+                ", geminiBreak='" + geminiBreak + '\'' +
+                '}';
     }
 }

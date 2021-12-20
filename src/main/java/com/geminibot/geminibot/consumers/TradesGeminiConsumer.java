@@ -14,6 +14,7 @@ import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import static java.lang.Thread.sleep;
 
@@ -26,18 +27,25 @@ public class TradesGeminiConsumer extends GeminiConsumer {
         GeminiTradesResponse tradesResponse = this.get500TradesFromTimestamp(ts);
 
         var tradesFromQuery = tradesResponse.getTrades();
-        System.out.println(tradesFromQuery);
 
-        // reasoning: 500 trades is the max per call
-        // so if call has 500 trades,
-        // there is a high chance there is more trades to query
-        while (tradesFromQuery.size() == 500) {
+        var timestamps = new ArrayList<BigInteger>();
+        timestamps.add(null);
+        timestamps.add(BigInteger.valueOf(0));
+        BigInteger latestTimestamp = null;
+
+
+        while (tradesFromQuery.size() != 0 && !Objects.equals(timestamps.get(timestamps.size() - 1), latestTimestamp) && !Objects.equals(timestamps.get(timestamps.size() - 2), latestTimestamp)) {
             System.out.println("sleeping till i fetch more!");
             sleep(5000);
-            var latestTrade = (Trade)tradesFromQuery.get(0);
-            BigInteger latestTimeStamp = latestTrade.getTimestampms();
 
-            GeminiTradesResponse next500Trades = get500TradesFromTimestamp(latestTimeStamp.add(BigInteger.ONE));
+            var latestTrade = (Trade)tradesFromQuery.get(0);
+
+            latestTimestamp = latestTrade.getTimestampms();
+            timestamps.add(latestTimestamp);
+
+            System.out.println("LATEST TIMESTAMP=" + latestTimestamp);
+
+            GeminiTradesResponse next500Trades = get500TradesFromTimestamp(latestTimestamp);
             tradesFromQuery = next500Trades.getTrades();
             tradesResponse.appendTrades(tradesFromQuery);
         }
@@ -49,19 +57,23 @@ public class TradesGeminiConsumer extends GeminiConsumer {
         GeminiTradesResponse geminiTradesResponse = getFirst500Trades();
 
         var tradesFromQuery = geminiTradesResponse.getTrades();
-        System.out.println(tradesFromQuery);
 
-        // reasoning: 500 trades is a the max per call
-        // so if call has 500 trades,
-        // there is a high chance there is more trades to query
-        while (tradesFromQuery.size() == 500) {
+        var timestamps = new ArrayList<BigInteger>();
+        timestamps.add(null);
+        timestamps.add(BigInteger.valueOf(0));
+        BigInteger latestTimestamp = null;
+
+        while (!Objects.equals(timestamps.get(timestamps.size() - 1), latestTimestamp) || !Objects.equals(timestamps.get(timestamps.size() - 2), latestTimestamp)) {
             sleep(5000);
             ObjectMapper objectMapper = new ObjectMapper();
             var latestTrade = (Trade)tradesFromQuery.get(0);
 
-            BigInteger latestTimestamp = latestTrade.getTimestampms();
+            latestTimestamp = latestTrade.getTimestampms();
+            timestamps.add(latestTimestamp);
+            System.out.println("LATEST TIMESTAMP=" + latestTimestamp);
 
-            GeminiTradesResponse next500Trades = get500TradesFromTimestamp(latestTimestamp.add(BigInteger.ONE));
+
+            GeminiTradesResponse next500Trades = get500TradesFromTimestamp(latestTimestamp);
             tradesFromQuery = next500Trades.getTrades();
             geminiTradesResponse.appendTrades(tradesFromQuery);
         }
@@ -71,8 +83,7 @@ public class TradesGeminiConsumer extends GeminiConsumer {
     }
 
     public GeminiTradesResponse getFirst500Trades() throws InvalidKeyException, HttpClientErrorException {
-        BigInteger createdDate = new AccountGeminiConsumer(this).getAccountCreationDate();
-        return this.get500TradesFromTimestamp(createdDate);
+        return this.get500TradesFromTimestamp(BigInteger.valueOf(0));
     }
 
     public GeminiTradesResponse getMostRecent500Trades() throws InvalidKeyException, HttpClientErrorException {

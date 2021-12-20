@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
-import { ReactElement, useContext, useState } from "react";
+import { ReactElement, useState } from "react";
 import { useFormik } from "formik";
 import { FormikFormControl } from "../components/FormirkFormControl/formik-form-control";
 import { LoginDTO, LoginDTOValidationSchema } from "../schemas/LoginDTO";
@@ -8,16 +8,19 @@ import { AxiosError, AxiosResponse } from "axios";
 import { userLoginUrl } from "../constants/urls";
 import { axiosInstance } from "../axios/axios";
 import { LoginResponse } from "../types/axios-responses/LoginResponse";
-import { UserAxiosContext } from "../contexts/UserAxiosContext";
+import { useAppDispatch } from "../redux/hooks/redux";
+import { updateUser } from "../redux/slices/userSlice";
+import { updateAxiosConfig } from "../redux/slices/axiosSlice";
+import { useNavigate } from "react-router-dom";
 
 function Login(): ReactElement {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [formSubmitState, setFormSubmitState] = useState({
     formIsSubmitting: false,
     submitMessage: "",
   });
-
-  const { setUserInfo, setAxiosConfig, setUserAxiosConfig } =
-    useContext(UserAxiosContext);
 
   const formik = useFormik({
     initialValues: {
@@ -40,27 +43,34 @@ function Login(): ReactElement {
             submitMessage: data.message,
           });
 
-          if (setAxiosConfig != null && setUserInfo != null) {
-            setUserAxiosConfig({
-              userInfo: {
-                id: data.entity.id,
-                email: data.entity.email,
-                jsonWebToken: data.entity.jsonWebToken,
+          dispatch(
+            updateUser({
+              id: data.entity.id,
+              email: data.entity.email,
+              jsonWebToken: data.entity.jsonWebToken,
+            })
+          );
+
+          dispatch(
+            updateAxiosConfig({
+              headers: {
+                Authorization: "Bearer " + data.entity.jsonWebToken,
               },
-              axiosConfig: {
-                headers: {
-                  Authorization: "Bearer " + data.entity.jsonWebToken,
-                },
-              },
-            });
-          }
+            })
+          );
+
+          navigate("/protected/welcome");
         })
         .catch((errorResponse: AxiosError<LoginResponse>) => {
           const data: LoginResponse | undefined = errorResponse?.response?.data;
 
-          setAxiosConfig({
-            headers: { Authorization: "" },
-          });
+          dispatch(
+            updateAxiosConfig({
+              headers: {
+                Authorization: "",
+              },
+            })
+          );
 
           setFormSubmitState({
             formIsSubmitting: false,
@@ -115,4 +125,4 @@ function Login(): ReactElement {
   );
 }
 
-export {Login};
+export { Login };

@@ -1,58 +1,28 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Login } from "./routes/login";
-import { Register } from "./routes/register";
-import { RequireAuth } from "./security/require-auth";
-import { Transfers } from "./routes/transfers";
-import { RequireNotAuth } from "./security/require-not-auth";
-import { ApiKeys } from "./routes/api-keys";
-import { Trades } from "./routes/trades";
-import { NetWorth } from "./routes/net-worth";
+import { Provider } from "react-redux";
+import store from "./redux/store";
+import { mainTheme } from "./themes/main-theme";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { Router } from "./Router";
 
-function ProtectedRoute({
-  path,
-  element,
-}: {
-  path: string;
-  element: JSX.Element;
-}): JSX.Element {
-  return <Route path={path} element={<RequireAuth>{element}</RequireAuth>} />;
-}
-
-function OnlyLoggedOut({
-  path,
-  element,
-}: {
-  path: string;
-  element: JSX.Element;
-}): JSX.Element {
-  return (
-    <Route path={path} element={<RequireNotAuth>{element}</RequireNotAuth>} />
-  );
-}
+const queryClient = new QueryClient();
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          {OnlyLoggedOut({ path: "login", element: <Login /> })}
-          {OnlyLoggedOut({ path: "register", element: <Register /> })}
-          <Route path="protected/">
-            {ProtectedRoute({ path: "transfers", element: <Transfers /> })}
-            {ProtectedRoute({ path: "networth", element: <NetWorth /> })}
-            {ProtectedRoute({ path: "trades", element: <Trades /> })}
-            {ProtectedRoute({ path: "apikeys", element: <ApiKeys /> })}
-            {ProtectedRoute({ path: "welcome", element: <h1>Welcome</h1> })}
-          </Route>
-          <Route path="*" element={<h1>There's nothing here!</h1>} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={mainTheme}>
+          <CssBaseline />
+          <Router />
+        </ThemeProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

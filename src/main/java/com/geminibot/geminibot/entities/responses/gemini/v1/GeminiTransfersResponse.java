@@ -20,8 +20,8 @@ public class GeminiTransfersResponse extends GeminiResponse {
     @Override
     public String toString() {
         return "TransfersResponse{" +
-                "transfers=" + transfers +
                 "transferCount=" + getTransfersCount() +
+                "transfers=" + transfers +
                 '}';
     }
 

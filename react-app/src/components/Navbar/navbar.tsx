@@ -7,8 +7,12 @@ import { useTheme } from "@mui/material";
 import { SettingsMenu } from "./settings-menu";
 import { MobilePagesMenu } from "./mobile-pages-menu";
 import { DesktopPagesMenu } from "./desktop-pages-menu";
-import { UserAxiosContext } from "../../contexts/UserAxiosContext";
-import { baseConfig } from "../../axios/axios";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/redux";
+import { selectUser, updateUser } from "../../redux/slices/userSlice";
+import {
+  selectAxiosConfig,
+  updateAxiosConfig,
+} from "../../redux/slices/axiosSlice";
 
 interface IPage {
   route: string;
@@ -17,10 +21,10 @@ interface IPage {
 }
 
 const Navbar = () => {
-  const { userAxiosConfig, setAxiosConfig, setUserInfo } =
-    React.useContext(UserAxiosContext);
+  const userInfo = useAppSelector(selectUser);
+  const axiosConfig = useAppSelector(selectAxiosConfig);
 
-  const { userInfo, axiosConfig } = userAxiosConfig;
+  const dispatch = useAppDispatch();
 
   const pages = (loggedIn: boolean): IPage[] => {
     if (loggedIn) {
@@ -40,27 +44,25 @@ const Navbar = () => {
           route: "/protected/transfers",
           name: "Transfers",
         },
-        // ---- API KEYS ---
+        // ---- Analysis ---
         {
-          route: "/protected/networth",
-          name: "Net Worth",
+          route: "/protected/analysis",
+          name: "Analysis",
         },
         // ---- LOGOUT ---
         {
           route: "/login",
           name: "Logout",
           onClickCallback: () => {
-            if (setUserInfo !== null) {
-              setUserInfo({
+            dispatch(
+              updateUser({
                 id: null,
                 email: null,
                 jsonWebToken: null,
-              });
-            }
+              })
+            );
 
-            if (setAxiosConfig !== null) {
-              setAxiosConfig(baseConfig);
-            }
+            dispatch(updateAxiosConfig({ headers: { Authorization: "" } }));
           },
         },
       ];
