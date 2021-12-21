@@ -35,7 +35,15 @@ const tradesImportUrl = (): string => {
 };
 
 const netWorthCurrenciesUrl = (): string => {
-  return "/networth/currencies";
+  return "/analysis/currencies";
+};
+
+const netFeesCurrenciesUrl = (): string => {
+  return "/analysis/fees";
+};
+
+const netTransfersCurrenciesUrl = (): string => {
+  return "/analysis/transfers";
 };
 
 export {
@@ -48,4 +56,6 @@ export {
   tradesUrl,
   tradesImportUrl,
   netWorthCurrenciesUrl,
+  netFeesCurrenciesUrl,
+  netTransfersCurrenciesUrl,
 };

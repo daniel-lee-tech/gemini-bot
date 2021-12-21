@@ -11,7 +11,9 @@ import { useAppSelector } from "./redux/hooks/redux";
 import { selectUser } from "./redux/slices/userSlice";
 import { App } from "./App";
 import { Welcome } from "./routes/welcome";
-import { CurrencyAggregate } from "./routes/analysis/currency-aggregate";
+import { CurrencyAnalysis } from "./routes/analysis/currency-analysis";
+import { TransfersAnalysis } from "./routes/analysis/transfers-analysis";
+import { FeesAnalysis } from "./routes/analysis/fees-analysis";
 
 function Router() {
   const { id } = useAppSelector(selectUser);
@@ -34,11 +36,13 @@ function Router() {
                 <>
                   <Route path="transfers" element={<Transfers />} />
                   <Route path="analysis/" element={<Analysis />}>
-                    <Route path="" element={<CurrencyAggregate />} />
+                    <Route path="" element={<CurrencyAnalysis />} />
                     <Route
                       path="currencyaggregate"
-                      element={<CurrencyAggregate />}
+                      element={<CurrencyAnalysis />}
                     />
+                    <Route path="fees" element={<FeesAnalysis />} />
+                    <Route path="transfers" element={<TransfersAnalysis />} />
                   </Route>
                   <Route path="trades" element={<Trades />} />
                   <Route path="apikeys" element={<ApiKeys />} />

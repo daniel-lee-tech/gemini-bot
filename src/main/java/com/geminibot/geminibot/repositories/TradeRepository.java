@@ -139,4 +139,6 @@ public interface TradeRepository extends JpaRepository<Trade, Long> {
         public String getQuoteCurrency();
 
     }
+
+
 }

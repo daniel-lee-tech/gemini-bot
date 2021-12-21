@@ -3,6 +3,8 @@ import { ApiKey } from "../schemas/ApiKey";
 import { axiosInstance } from "./axios";
 import {
   apiUrl,
+  netFeesCurrenciesUrl,
+  netTransfersCurrenciesUrl,
   netWorthCurrenciesUrl,
   tradesImportUrl,
   tradesUrl,
@@ -12,6 +14,8 @@ import {
 import { ApiKeysResponse } from "../types/axios-responses/ApiKeysResponse";
 import { TransfersResponse } from "../types/axios-responses/TransfersResponse";
 import { NetWorthCurrencyResponse } from "../types/axios-responses/NetWorthCurrencyResponse";
+import { NetWorthFeesResponse } from "../types/axios-responses/NetFeesCurrencyResponse";
+import { NetWorthTransfersResponse } from "../types/axios-responses/NetTransfersCurrencyResponse";
 
 function addApiKey(
   axiosConfig: AxiosRequestConfig,
@@ -68,6 +72,22 @@ function fetchNetWorthCurrencies(
     .then((response) => response.data);
 }
 
+function fetchNetFeesCurrencies(
+  axiosConfig: AxiosRequestConfig
+): Promise<NetWorthFeesResponse> {
+  return axiosInstance(axiosConfig)
+    .get(netFeesCurrenciesUrl())
+    .then((response) => response.data);
+}
+
+function fetchNetTransfersCurrencies(
+  axiosConfig: AxiosRequestConfig
+): Promise<NetWorthTransfersResponse> {
+  return axiosInstance(axiosConfig)
+    .get(netTransfersCurrenciesUrl())
+    .then((response) => response.data);
+}
+
 function importNetWorthCurrencies(
   axiosConfig: AxiosRequestConfig
 ): Promise<TransfersResponse> {
@@ -85,4 +105,6 @@ export {
   importTrades,
   fetchNetWorthCurrencies,
   importNetWorthCurrencies,
+  fetchNetFeesCurrencies,
+  fetchNetTransfersCurrencies,
 };

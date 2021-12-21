@@ -10,7 +10,7 @@ import { fetchNetWorthCurrencies } from "../../axios/queries";
 import { useAppSelector } from "../../redux/hooks/redux";
 import { selectAxiosConfig } from "../../redux/slices/axiosSlice";
 
-function CurrencyAggregate() {
+function CurrencyAnalysis() {
   const axiosConfig = useAppSelector(selectAxiosConfig);
 
   const { isLoading, error, data, isSuccess } = useQuery<
@@ -94,4 +94,4 @@ function CurrencyAggregate() {
   return <span>Error: {error?.message}</span>;
 }
 
-export { CurrencyAggregate };
+export { CurrencyAnalysis };
